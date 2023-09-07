@@ -1,7 +1,7 @@
 
 #include "can_usb.h"
 #include "cobs.h"
-//#include "usbd_cdc_if.h"
+#include "usbd_cdc_if.h"
 #include "stm32f3xx_hal.h"
 #include "main.h"
 
@@ -36,7 +36,7 @@ void usb_process(uint8_t usb_msg[], const uint8_t len)
     {
         // encoded data
         static uint8_t HelloSLCAN_encoded[] = {0x0c, 0x01 << 4, 'H', 'e', 'l', 'l', 'o', 'S', 'L', 'C', 'A', 'N', 0x00};
-//        CDC_Transmit_FS(HelloSLCAN_encoded, 11 + 2);
+        CDC_Transmit_FS(HelloSLCAN_encoded, 11 + 2);
     }
     case 0x03: //robomaster_set_parameter
     {
@@ -100,7 +100,7 @@ void can_process(const CAN_RxHeaderTypeDef *RxHeader, uint8_t Data[])
 
     cobs_encode(Data, encoded_data, 14);
     led_on(green);
-/*    if (CDC_Transmit_FS(encoded_data, 14 + 2) == USBD_OK)
+    if (CDC_Transmit_FS(encoded_data, 14 + 2) == USBD_OK)
     {
         led_on(green);
         // transmit success
@@ -108,7 +108,7 @@ void can_process(const CAN_RxHeaderTypeDef *RxHeader, uint8_t Data[])
     else
     {
         // transmit fail
-    }*/
+    }
 }
 
 CAN_TxHeaderTypeDef TxHeader;

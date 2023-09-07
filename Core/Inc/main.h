@@ -60,6 +60,8 @@ void Error_Handler(void);
 #define EMS_Pin GPIO_PIN_1
 #define EMS_GPIO_Port GPIOA
 #define EMS_EXTI_IRQn EXTI1_IRQn
+#define USB_PULLUP_Pin GPIO_PIN_10
+#define USB_PULLUP_GPIO_Port GPIOA
 #define LED_CAN_Pin GPIO_PIN_4
 #define LED_CAN_GPIO_Port GPIOB
 #define LED_GREEN_Pin GPIO_PIN_5

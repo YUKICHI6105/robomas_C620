@@ -18,7 +18,7 @@ enum class Mode{
 };
 
 struct MotorParam{
-	Mode mode[8] = {Mode::dis,Mode::dis,Mode::vel,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis};
+	Mode mode[8] = {Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis};
 	float gool[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
 	float target[8] = {3.14,0.0,0.01,0.0,0.0,0.0,0.0,0.0};//目標値
 	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};

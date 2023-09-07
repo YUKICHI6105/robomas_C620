@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -92,6 +93,7 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN_Init();
   MX_TIM3_Init();
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   led_on(green);
   led_on(yellow);
@@ -138,6 +140,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -164,6 +167,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
+  PeriphClkInit.USBClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
@@ -281,6 +290,9 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(USB_PULLUP_GPIO_Port, USB_PULLUP_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED_CAN_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|LED_RED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : EMS_Pin */
@@ -288,6 +300,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(EMS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : USB_PULLUP_Pin */
+  GPIO_InitStruct.Pin = USB_PULLUP_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(USB_PULLUP_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LED_CAN_Pin LED_GREEN_Pin LED_YELLOW_Pin LED_RED_Pin */
   GPIO_InitStruct.Pin = LED_CAN_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|LED_RED_Pin;
