@@ -20,15 +20,15 @@ enum class Mode{
 struct MotorParam{
 	Mode mode[8] = {Mode::dis,Mode::dis,Mode::vel,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis};
 	float gool[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
-	float target[8] = {3.14,0.0,0.1,0.0,0.0,0.0,0.0,0.0};//目標値
+	float target[8] = {3.14,0.0,0.01,0.0,0.0,0.0,0.0,0.0};//目標値
 	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float mechanical_angle[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//機械角
 	float velocity[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//rpm->rad/s
 	float current[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	uint8_t temp[8] = {0,0,0,0,0,0,0,0};
 	uint8_t limitTemp[8] = {50,50,50,50,50,50,50,50};
-	float Kp[8] = {0.1,0.0,0.1f,0.0,0.0,0.0,0.0,0.0};
-	float Ki[8] = {0.0,0.0,0.08f,0.0,0.0,0.0,0.0,0.0};
+	float Kp[8] = {0.1,0.0,0.05f,0.0,0.0,0.0,0.0,0.0};
+	float Ki[8] = {0.0,0.0,0.0f,0.0,0.0,0.0,0.0,0.0};
 	float Kd[8] = {0.8,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 };
 
@@ -112,30 +112,28 @@ inline void MotorCtrl::setTemp(uint8_t usb_msg[]){
 
 inline void MotorCtrl::setTarget(uint8_t usb_msg[]){
 	for(int i =0;i<8;i++){
-		uint32_t buf = (usb_msg[4*i] << 24) | (usb_msg[4*i+1] << 16) | (usb_msg[4*i+2] << 8) | (usb_msg[4*i+3] << 0);
+		uint32_t buf = (usb_msg[4*i+1] << 24) | (usb_msg[4*i+2] << 16) | (usb_msg[4*i+3] << 8) | (usb_msg[4*i+4] << 0);
 		std::memcpy(&param.target[i],&buf,1);
 	}
 }
 
 inline void MotorCtrl::setKp(uint8_t usb_msg[]){
 	for(int i =0;i<8;i++){
-		uint32_t buf = (usb_msg[4*i] << 24) | (usb_msg[4*i+1] << 16) | (usb_msg[4*i+2] << 8) | (usb_msg[4*i+3] << 0);
+		uint32_t buf = (usb_msg[4*i+1] << 24) | (usb_msg[4*i+2] << 16) | (usb_msg[4*i+3] << 8) | (usb_msg[4*i+4] << 0);
 		std::memcpy(&param.Kp[i],&buf,1);
 	}
 }
 
 inline void MotorCtrl::setKi(uint8_t usb_msg[]){
 	for(int i =0;i<8;i++){
-		uint32_t buf = (usb_msg[4*i] << 24) | (usb_msg[4*i+1] << 16) | (usb_msg[4*i+2] << 8) | (usb_msg[4*i+3] << 0);
+		uint32_t buf = (usb_msg[4*i+1] << 24) | (usb_msg[4*i+2] << 16) | (usb_msg[4*i+3] << 8) | (usb_msg[4*i+4] << 0);
 		std::memcpy(&param.Ki[i],&buf,1);
 	}
 }
 
 inline void MotorCtrl::setKd(uint8_t usb_msg[]){
 	for(int i =0;i<8;i++){
-		uint32_t buf = (usb_msg[4*i] << 24) | (usb_msg[4*i+1] << 16) | (usb_msg[4*i+2] << 8) | (usb_msg[4*i+3] << 0);
+		uint32_t buf = (usb_msg[4*i+1] << 24) | (usb_msg[4*i+2] << 16) | (usb_msg[4*i+3] << 8) | (usb_msg[4*i+4] << 0);
 		std::memcpy(&param.Kp[i],&buf,1);
 	}
 }
-
-

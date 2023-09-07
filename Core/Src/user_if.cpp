@@ -41,7 +41,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     	}
     }
 }
-/*
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == EMS_Pin){
@@ -54,7 +54,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	        //CDC_Transmit_FS(HelloSLCAN_encoded, 2 + 2);
 		}
 	}
-}*/
+}
 
 uint16_t changeValue(float target){
 	uint16_t value;
@@ -126,14 +126,14 @@ void MotorCtrl::reset(){
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if (htim->Instance == TIM3){
-		//TIM_ClearITPendingBit(TIM3, TIM_IT_CC4);
-//		if(HAL_GPIO_ReadPin(EMS_GPIO_Port, EMS_Pin)){
+	//TIM_ClearITPendingBit(TIM3, TIM_IT_CC4);
+		if(HAL_GPIO_ReadPin(EMS_GPIO_Port, EMS_Pin)){
 			motor.transmit1();
 			motor.transmit2();
-//		}else{
-//			motor.ems();
-//			motor.reset();
-//		}
+		}else{
+			motor.ems();
+			motor.reset();
+		}
 	}
 }
 }
