@@ -5,7 +5,7 @@
 ../Core/Inc/MotorCtrl.hpp:120:13:void MotorCtrl::setKp(uint8_t*)	2
 ../Core/Inc/MotorCtrl.hpp:127:13:void MotorCtrl::setKi(uint8_t*)	2
 ../Core/Inc/MotorCtrl.hpp:134:13:void MotorCtrl::setKd(uint8_t*)	2
-../Core/Src/can_usb.cpp:18:6:void usb_process(uint8_t*, uint8_t)	5
-../Core/Src/can_usb.cpp:53:6:void can_process(const CAN_RxHeaderTypeDef*, uint8_t*)	4
-../Core/Src/can_usb.cpp:117:6:void usb_to_can(uint8_t*, uint8_t)	4
-../Core/Src/can_usb.cpp:163:6:void robomaster(uint8_t*, uint8_t)	7
+../Core/Src/can_usb.cpp:17:6:void usb_process(uint8_t*, uint8_t)	5
+../Core/Src/can_usb.cpp:52:6:void can_process(const CAN_RxHeaderTypeDef*, uint8_t*)	4
+../Core/Src/can_usb.cpp:116:6:void usb_to_can(uint8_t*, uint8_t)	4
+../Core/Src/can_usb.cpp:162:6:void robomaster(uint8_t*, uint8_t)	7

@@ -1,4 +1,3 @@
-
 #include "can_usb.h"
 #include "cobs.h"
 #include "usbd_cdc_if.h"

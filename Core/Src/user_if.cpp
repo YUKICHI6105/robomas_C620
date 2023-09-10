@@ -7,7 +7,7 @@
 
 #include "main.h"
 #include "can_usb.h"
-//#include "usbd_cdc_if.h"
+#include "usbd_cdc_if.h"
 
 #include "led.h"
 #include "MotorCtrl.hpp"
@@ -48,10 +48,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		led_on(red);
 		if(HAL_GPIO_ReadPin(EMS_GPIO_Port, EMS_Pin)){
 	        static uint8_t HelloSLCAN_encoded[] = {0x03, 0x02 << 4,'H', 0x00};
-	        //CDC_Transmit_FS(HelloSLCAN_encoded, 2 + 2);
+	        CDC_Transmit_FS(HelloSLCAN_encoded, 2 + 2);
 		}else{
 	        static uint8_t HelloSLCAN_encoded[] = {0x03, 0x02 << 4,'L', 0x00};
-	        //CDC_Transmit_FS(HelloSLCAN_encoded, 2 + 2);
+	        CDC_Transmit_FS(HelloSLCAN_encoded, 2 + 2);
 		}
 	}
 }
@@ -119,10 +119,6 @@ void MotorCtrl::reset(){
 		param.gool[i]=0;
 	}
 }
-
-
-
-
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if (htim->Instance == TIM3){
