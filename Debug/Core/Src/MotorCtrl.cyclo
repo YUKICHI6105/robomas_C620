@@ -1,0 +1,15 @@
+../Core/Src/MotorCtrl.cpp:10:6:void MotorCtrl::setAng(uint16_t, uint32_t)	1
+../Core/Src/MotorCtrl.cpp:14:6:void MotorCtrl::setVel(uint16_t, uint32_t)	2
+../Core/Src/MotorCtrl.cpp:23:6:void MotorCtrl::setCur(uint16_t, uint32_t)	4
+../Core/Src/MotorCtrl.cpp:32:6:bool MotorCtrl::update(uint32_t, uint8_t*)	6
+../Core/Src/MotorCtrl.cpp:58:6:void MotorCtrl::reset(uint8_t)	1
+../Core/Src/MotorCtrl.cpp:67:6:void MotorCtrl::setMode(uint8_t*)	8
+../Core/Src/MotorCtrl.cpp:90:6:void MotorCtrl::setLimitTemp(uint8_t*)	2
+../Core/Src/MotorCtrl.cpp:96:6:void MotorCtrl::setTarget(uint8_t*)	2
+../Core/Src/MotorCtrl.cpp:103:6:void MotorCtrl::setKp(uint8_t*)	2
+../Core/Src/MotorCtrl.cpp:110:6:void MotorCtrl::setKi(uint8_t*)	2
+../Core/Src/MotorCtrl.cpp:117:6:void MotorCtrl::setKd(uint8_t*)	2
+../Core/Src/MotorCtrl.cpp:124:10:uint16_t changeValue(float)	4
+../Core/Src/MotorCtrl.cpp:145:6:void MotorCtrl::transmit1()	4
+../Core/Src/MotorCtrl.cpp:159:6:void MotorCtrl::transmit2()	3
+../Core/Src/MotorCtrl.cpp:171:6:void MotorCtrl::ems()	1

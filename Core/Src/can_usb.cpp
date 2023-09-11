@@ -170,7 +170,7 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 		motor.setMode(usb_msg);
 		break;
 	}case 0x01:{
-		motor.setTemp(usb_msg);
+		motor.setLimitTemp(usb_msg);
 		break;
 	}case 0x02:{
 		motor.setTarget(usb_msg);

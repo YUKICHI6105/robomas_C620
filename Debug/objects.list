@@ -1,3 +1,4 @@
+"./Core/Src/MotorCtrl.o"
 "./Core/Src/can_usb.o"
 "./Core/Src/led.o"
 "./Core/Src/main.o"

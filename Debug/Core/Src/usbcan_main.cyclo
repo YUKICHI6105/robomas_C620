@@ -1,5 +1,5 @@
-../Core/Inc/MotorCtrl.hpp:20:8:constexpr MotorParam::MotorParam()	1
-../Core/Inc/MotorCtrl.hpp:35:7:MotorCtrl::MotorCtrl()	1
+../Core/Inc/MotorCtrl.hpp:27:8:constexpr MotorParam::MotorParam()	1
+../Core/Inc/MotorCtrl.hpp:42:7:MotorCtrl::MotorCtrl()	1
 ../Core/Src/usbcan_main.cpp:20:6:void main_cpp()	10
 ../Core/Src/usbcan_main.cpp:82:1:void __static_initialization_and_destruction_0(int, int)	3
 ../Core/Src/usbcan_main.cpp:82:1:cpp)	1
