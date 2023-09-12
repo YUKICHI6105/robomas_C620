@@ -26,9 +26,10 @@ enum class Mode{
 
 struct MotorParam{
 	Mode mode[8] = {Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis};
-	float gool[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
+	float goal[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
 	float target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//目標値
-	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float ie[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//de
 	float mechanical_angle[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//機械角
 	float velocity[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//rpm->rad/s
 	float current[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
@@ -37,6 +38,7 @@ struct MotorParam{
 	float Kp[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float Ki[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float Kd[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float revolution[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 };
 
 class MotorCtrl{

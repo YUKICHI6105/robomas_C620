@@ -8,7 +8,7 @@
 #include "MotorCtrl.hpp"
 
 void MotorCtrl::setAng(uint16_t data, uint32_t receiveID){
-	param.mechanical_angle[receiveID-0x201] = 360.0*data/8191;
+	param.mechanical_angle[receiveID-0x201] = 360.0*data/8191 - 180.0f;
 }
 
 void MotorCtrl::setVel(uint16_t data, uint32_t receiveID){
@@ -31,25 +31,34 @@ void MotorCtrl::setCur(uint16_t data, uint32_t receiveID){
 
 bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 	if(ReceiveID<0x201||ReceiveID>0x208){return false;}
+	uint8_t number = ReceiveID - 0x201;
 	setAng(((static_cast<uint16_t>(receiveData[0]) << 8) | receiveData[1]), ReceiveID);
 	setVel(((static_cast<uint16_t>(receiveData[2]) << 8) | receiveData[3]), ReceiveID);
 	setCur(((static_cast<uint16_t>(receiveData[4]) << 8) | receiveData[5]), ReceiveID);
-	param.temp[ReceiveID-0x201] = receiveData[6];
+	param.temp[number] = receiveData[6];
 	//vel = ((static_cast<uint16_t>(receiveData[2]) << 8) | receiveData[3]);
-	if(param.mode[ReceiveID-0x201] == Mode::dis){
-		reset(ReceiveID-0x201);
+	if(param.mode[number] == Mode::dis){
+		reset(number);
 	}
-	if(param.mode[ReceiveID-0x201] == Mode::pos){
-		e = param.target[ReceiveID-0x201] - param.mechanical_angle[ReceiveID-0x201];
-		param.gool[ReceiveID-0x201] = param.gool[ReceiveID-0x201]+param.Kp[ReceiveID-0x201]*e+param.Ki[ReceiveID-0x201]*(e+param.e_pre[ReceiveID-0x201])*0.001/2+param.Kd[ReceiveID-0x201]*(e-param.e_pre[ReceiveID-0x201])/0.001;
-		param.e_pre[ReceiveID-0x201] = e;
+	if(param.mode[number] == Mode::vel){
+		e = param.target[number] - param.velocity[number];
+		param.ie[number] = param.ie[number] + e;
+		param.goal[number] = param.goal[number]+param.Kp[number]*e+param.Ki[number]*param.ie[number]*0.001/2+(param.Kd[number]*(e-param.e_pre[number])/0.001)/2;
+		param.e_pre[number] = e;
 	}
-	if(param.mode[ReceiveID-0x201] == Mode::vel){
-		e = param.target[ReceiveID-0x201] - param.velocity[ReceiveID-0x201];
-		param.gool[ReceiveID-0x201] = param.gool[ReceiveID-0x201]+param.Kp[ReceiveID-0x201]*e+param.Ki[ReceiveID-0x201]*(e+param.e_pre[ReceiveID-0x201])*0.001/2+param.Kd[ReceiveID-0x201]*(e-param.e_pre[ReceiveID-0x201])/0.001;
-		param.e_pre[ReceiveID-0x201] = e;
+	if(param.mode[number] == Mode::pos){
+//		if(param.mechanical_angle[number] >= 0){
+//			param.revolution[number] = param.mechanical_angle[number] + 360*static_cast<uint32_t>((param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001)/360);
+//		}else{
+//			param.revolution[number] = param.mechanical_angle[number] + 360*(static_cast<uint32_t>((param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001)/360)+1);
+//		}
+		param.revolution[number] = param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001;
+		e = param.target[number] - param.revolution[number];
+		param.ie[number] = param.ie[number] + e*0.001;
+		param.goal[number] = param.goal[number]+param.Kp[number]*e+param.Ki[number]*param.ie[number]+param.Kd[number]*((e-param.e_pre[number])/0.001)/2;
+		param.e_pre[number] = e;
 	}
-	if(param.mode[ReceiveID-0x201] == Mode::hom){
+	if(param.mode[number] == Mode::hom){
 
 	}
 	return true;
@@ -60,22 +69,25 @@ void MotorCtrl::reset(uint8_t i){
 		value2[i]=0;
 		param.target[i]=0;
 		param.mode[i]=Mode::dis;
-		param.gool[i]=0;
+		param.goal[i]=0;
 		param.e_pre[i]=0;
+		param.ie[i]=0;
+		param.revolution[i]=0;
 }
 
 void MotorCtrl::setMode(uint8_t usb_msg[]){
-	for(int i =0;i<8;i++){
-		if(usb_msg[i]==0){
+	for(int i = 0;i<8;i++){
+		if(usb_msg[i+1]==0){
 			param.mode[i] = Mode::dis;
 			reset(i);
-		}else if(usb_msg[i]==1){
+		}else if(usb_msg[i+1]==1){
 			param.mode[i] = Mode::vel;
 			reset(i);
-		}else if(usb_msg[i]==2){
+		}else if(usb_msg[i+1]==2){
 			param.mode[i] = Mode::pos;
+			//param.revolution[i] = param.mechanical_angle[i] - 180.0f;
 			reset(i);
-		}else if(usb_msg[i]==3){
+		}else if(usb_msg[i+1]==3){
 			param.mode[i] = Mode::hom;
 			reset(i);
 		}
@@ -145,8 +157,10 @@ uint16_t changeValue(float target){
 void MotorCtrl::transmit1(){
 	for(int i=0;i<4;i++){
 		if(param.temp[i] < param.limitTemp[i]){
-			value1[2*i] = static_cast<uint8_t>(changeValue(param.gool[i]) >> 8);
-			value1[2*i+1] = static_cast<uint8_t>(changeValue(param.gool[i]) & 0xFF);
+			value1[2*i] = static_cast<uint8_t>(changeValue(param.goal[i]) >> 8);
+			value1[2*i+1] = static_cast<uint8_t>(changeValue(param.goal[i]) & 0xFF);
+		}else{
+			break;
 		}
 	}
 	if (0 < HAL_CAN_GetTxMailboxesFreeLevel(&hcan))
@@ -158,14 +172,18 @@ void MotorCtrl::transmit1(){
 
 void MotorCtrl::transmit2(){
 	for(int i=4;i<8;i++){
-			value2[2*(i-4)] = static_cast<uint8_t>(changeValue(param.gool[i]) >> 8);
-			value2[2*(i-4)+1] = static_cast<uint8_t>(changeValue(param.gool[i]) & 0xFF);
+		if(param.temp[i] < param.limitTemp[i]){
+			value2[2*(i-4)] = static_cast<uint8_t>(changeValue(param.goal[i]) >> 8);
+			value2[2*(i-4)+1] = static_cast<uint8_t>(changeValue(param.goal[i]) & 0xFF);
+		}else{
+			break;
 		}
 	if (0 < HAL_CAN_GetTxMailboxesFreeLevel(&hcan))
 	    {
 	        led_on(can);
 	        HAL_CAN_AddTxMessage(&hcan, &TxHeader2, value2, &TxMailbox);
 	    }
+}
 }
 
 void MotorCtrl::ems(){
