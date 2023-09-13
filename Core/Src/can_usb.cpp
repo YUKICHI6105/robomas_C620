@@ -183,6 +183,9 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 		break;
 	}case 0x05:{
 		motor.setKd(usb_msg);
+		break;
+	}case 0x06:{
+		motor.setLimitIe(usb_msg);
 	}
 	}
 }

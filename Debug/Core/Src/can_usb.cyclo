@@ -2,4 +2,4 @@
 ../Core/Src/can_usb.cpp:17:6:void usb_process(uint8_t*, uint8_t)	5
 ../Core/Src/can_usb.cpp:52:6:void can_process(const CAN_RxHeaderTypeDef*, uint8_t*)	4
 ../Core/Src/can_usb.cpp:116:6:void usb_to_can(uint8_t*, uint8_t)	4
-../Core/Src/can_usb.cpp:162:6:void robomaster(uint8_t*, uint8_t)	7
+../Core/Src/can_usb.cpp:162:6:void robomaster(uint8_t*, uint8_t)	8

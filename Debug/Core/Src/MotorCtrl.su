@@ -1,15 +1,16 @@
 ../Core/Src/MotorCtrl.cpp:10:6:void MotorCtrl::setAng(uint16_t, uint32_t)	32	static
 ../Core/Src/MotorCtrl.cpp:14:6:void MotorCtrl::setVel(uint16_t, uint32_t)	32	static
 ../Core/Src/MotorCtrl.cpp:23:6:void MotorCtrl::setCur(uint16_t, uint32_t)	24	static
-../Core/Src/MotorCtrl.cpp:32:6:bool MotorCtrl::update(uint32_t, uint8_t*)	40	static
-../Core/Src/MotorCtrl.cpp:67:6:void MotorCtrl::reset(uint8_t)	16	static
-../Core/Src/MotorCtrl.cpp:78:6:void MotorCtrl::setMode(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:102:6:void MotorCtrl::setLimitTemp(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:108:6:void MotorCtrl::setTarget(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:115:6:void MotorCtrl::setKp(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:122:6:void MotorCtrl::setKi(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:129:6:void MotorCtrl::setKd(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:136:10:uint16_t changeValue(float)	24	static
-../Core/Src/MotorCtrl.cpp:157:6:void MotorCtrl::transmit1()	24	static
-../Core/Src/MotorCtrl.cpp:173:6:void MotorCtrl::transmit2()	24	static
-../Core/Src/MotorCtrl.cpp:189:6:void MotorCtrl::ems()	24	static
+../Core/Src/MotorCtrl.cpp:32:6:bool MotorCtrl::update(uint32_t, uint8_t*)	48	static
+../Core/Src/MotorCtrl.cpp:77:6:void MotorCtrl::reset(uint8_t)	16	static
+../Core/Src/MotorCtrl.cpp:88:6:void MotorCtrl::setMode(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:112:6:void MotorCtrl::setLimitTemp(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:118:6:void MotorCtrl::setTarget(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:125:6:void MotorCtrl::setKp(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:132:6:void MotorCtrl::setKi(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:139:6:void MotorCtrl::setKd(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:146:6:void MotorCtrl::setLimitIe(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:153:10:uint16_t changeValue(float)	24	static
+../Core/Src/MotorCtrl.cpp:174:6:void MotorCtrl::transmit1()	24	static
+../Core/Src/MotorCtrl.cpp:192:6:void MotorCtrl::transmit2()	24	static
+../Core/Src/MotorCtrl.cpp:210:6:void MotorCtrl::ems()	24	static

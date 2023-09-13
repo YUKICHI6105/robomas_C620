@@ -29,6 +29,7 @@ struct MotorParam{
 	float goal[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
 	float target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//目標値
 	float ie[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float limitIe[8] = {100000.0,100000.0,100000.0,100000.0,100000.0,100000.0,100000.0,100000.0};
 	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//de
 	float mechanical_angle[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//機械角
 	float velocity[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//rpm->rad/s
@@ -58,6 +59,7 @@ public:
 	void setKp(uint8_t usb_msg[]);
 	void setKi(uint8_t usb_msg[]);
 	void setKd(uint8_t usb_msg[]);
+	void setLimitIe(uint8_t usb_msg[]);
 	uint8_t value1[8];
 	uint8_t value2[8];
 	void transmit1();

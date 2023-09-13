@@ -43,7 +43,12 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 	if(param.mode[number] == Mode::vel){
 		e = param.target[number] - param.velocity[number];
 		param.ie[number] = param.ie[number] + e;
-		param.goal[number] = param.goal[number]+param.Kp[number]*e+param.Ki[number]*param.ie[number]*0.001/2+(param.Kd[number]*(e-param.e_pre[number])/0.001)/2;
+		if(param.ie[number]>param.limitIe[number]){
+			param.ie[number] = param.limitIe[number];
+		}else if(param.ie[number]<-1*param.limitIe[number]){
+			param.ie[number] = -1*param.limitIe[number];
+		}
+		param.goal[number] = param.goal[number]+param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]*0.001/2+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
 		param.e_pre[number] = e;
 	}
 	if(param.mode[number] == Mode::pos){
@@ -55,7 +60,12 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 		param.revolution[number] = param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001;
 		e = param.target[number] - param.revolution[number];
 		param.ie[number] = param.ie[number] + e*0.001;
-		param.goal[number] = param.goal[number]+param.Kp[number]*e+param.Ki[number]*param.ie[number]+param.Kd[number]*((e-param.e_pre[number])/0.001)/2;
+		if(param.ie[number]>param.limitIe[number]){
+			param.ie[number] = param.limitIe[number];
+		}else if(param.ie[number]<-1*param.limitIe[number]){
+			param.ie[number] = -1*param.limitIe[number];
+		}
+		param.goal[number] = param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]*0.001/2+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
 		param.e_pre[number] = e;
 	}
 	if(param.mode[number] == Mode::hom){
@@ -133,6 +143,13 @@ void MotorCtrl::setKd(uint8_t usb_msg[]){
 	}
 }
 
+void MotorCtrl::setLimitIe(uint8_t usb_msg[]){
+	for(int i =0;i<8;i++){
+		uint32_t buf = (usb_msg[4*i+1] << 24) | (usb_msg[4*i+2] << 16) | (usb_msg[4*i+3] << 8) | (usb_msg[4*i+4] << 0);
+		std::memcpy(&param.limitIe[i],&buf,1);
+	}
+}
+
 uint16_t changeValue(float target){
 	uint16_t value;
 	if(target < 0.0){
@@ -160,7 +177,9 @@ void MotorCtrl::transmit1(){
 			value1[2*i] = static_cast<uint8_t>(changeValue(param.goal[i]) >> 8);
 			value1[2*i+1] = static_cast<uint8_t>(changeValue(param.goal[i]) & 0xFF);
 		}else{
-			break;
+			for(int i = 0;i<8;i++){
+				value1[i]=0;
+			}
 		}
 	}
 	if (0 < HAL_CAN_GetTxMailboxesFreeLevel(&hcan))
@@ -176,7 +195,9 @@ void MotorCtrl::transmit2(){
 			value2[2*(i-4)] = static_cast<uint8_t>(changeValue(param.goal[i]) >> 8);
 			value2[2*(i-4)+1] = static_cast<uint8_t>(changeValue(param.goal[i]) & 0xFF);
 		}else{
-			break;
+			for(int i = 0;i<8;i++){
+				value2[i]=0;
+			}
 		}
 	if (0 < HAL_CAN_GetTxMailboxesFreeLevel(&hcan))
 	    {
