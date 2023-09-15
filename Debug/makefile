@@ -53,34 +53,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := robomas_test
+BUILD_ARTIFACT_NAME := robomas_C620
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-robomas_test.elf \
+robomas_C620.elf \
 
 MAP_FILES += \
-robomas_test.map \
+robomas_C620.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-robomas_test.list \
+robomas_C620.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: robomas_test.elf secondary-outputs
+main-build: robomas_C620.elf secondary-outputs
 
 # Tool invocations
-robomas_test.elf robomas_test.map: $(OBJS) $(USER_OBJS) C:\Users\kouza\STM32CubeIDE\workspace_1.9.0\robomas_test\STM32F302CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "robomas_test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\kouza\STM32CubeIDE\workspace_1.9.0\robomas_test\STM32F302CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="robomas_test.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+robomas_C620.elf robomas_C620.map: $(OBJS) $(USER_OBJS) C:\Users\kouza\STM32CubeIDE\workspace_1.9.0\robomas_C620\STM32F302CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "robomas_C620.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\kouza\STM32CubeIDE\workspace_1.9.0\robomas_C620\STM32F302CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="robomas_C620.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -89,14 +89,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-robomas_test.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "robomas_test.list"
+robomas_C620.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "robomas_C620.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout robomas_test.elf robomas_test.list robomas_test.map
+	-$(RM) default.size.stdout robomas_C620.elf robomas_C620.list robomas_C620.map
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

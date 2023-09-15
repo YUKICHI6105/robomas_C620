@@ -39,7 +39,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     	}else{
     		can_process(&RxHeader, Data);
     	}
-    }
+    }else{
+		
+	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
