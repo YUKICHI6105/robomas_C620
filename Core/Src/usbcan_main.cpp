@@ -1,6 +1,6 @@
 #include "main.h"
-//#include "usbd_cdc_if.h"
-//#include "usb_device.h"
+#include "usbd_cdc_if.h"
+#include "usb_device.h"
 #include "led.h"
 #include "can_usb.h"
 #include "MotorCtrl.hpp"
@@ -11,7 +11,7 @@ extern"C"{
 	extern TIM_HandleTypeDef htim3;
 	extern CAN_HandleTypeDef hcan;
 	extern CAN_TxHeaderTypeDef TxHeader;
-	//extern USBD_HandleTypeDef hUsbDeviceFS;
+	extern USBD_HandleTypeDef hUsbDeviceFS;
 }
 
 CAN_TxHeaderTypeDef TxHeader1;
@@ -33,7 +33,7 @@ void main_cpp()
 	HAL_CAN_Start(&hcan);
 	HAL_TIM_Base_Start_IT(&htim3);
 
-	uint8_t debug_state = 1;
+	uint8_t debug_state = 0;
 	while (true)
 	{
 		if (READ_BIT(CAN->MSR, CAN_MSR_INAK) == 1)
@@ -42,7 +42,7 @@ void main_cpp()
 			CLEAR_BIT(CAN->MCR, CAN_MCR_INRQ);
 			led_on(green);
 		}
-/*		if (debug_state == 0)
+		if (debug_state == 0)
 		{
 			switch (hUsbDeviceFS.dev_state)
 			{
@@ -62,7 +62,7 @@ void main_cpp()
 				break;
 			}
 		}
-		else*/ if (debug_state == 1)
+		else if (debug_state == 1)
 		{
 			switch (hcan.ErrorCode)
 			{
