@@ -2,15 +2,15 @@
 ../Core/Src/MotorCtrl.cpp:14:6:void MotorCtrl::setVel(uint16_t, uint32_t)	32	static
 ../Core/Src/MotorCtrl.cpp:23:6:void MotorCtrl::setCur(uint16_t, uint32_t)	24	static
 ../Core/Src/MotorCtrl.cpp:32:6:bool MotorCtrl::update(uint32_t, uint8_t*)	48	static
-../Core/Src/MotorCtrl.cpp:77:6:void MotorCtrl::reset(uint8_t)	16	static
-../Core/Src/MotorCtrl.cpp:88:6:void MotorCtrl::setMode(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:112:6:void MotorCtrl::setLimitTemp(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:118:6:void MotorCtrl::setTarget(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:125:6:void MotorCtrl::setKp(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:132:6:void MotorCtrl::setKi(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:139:6:void MotorCtrl::setKd(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:146:6:void MotorCtrl::setLimitIe(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:153:10:uint16_t changeValue(float)	24	static
-../Core/Src/MotorCtrl.cpp:174:6:void MotorCtrl::transmit1()	24	static
-../Core/Src/MotorCtrl.cpp:192:6:void MotorCtrl::transmit2()	24	static
-../Core/Src/MotorCtrl.cpp:210:6:void MotorCtrl::ems()	24	static
+../Core/Src/MotorCtrl.cpp:78:6:void MotorCtrl::reset(uint8_t)	16	static
+../Core/Src/MotorCtrl.cpp:89:6:void MotorCtrl::setMode(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:114:6:void MotorCtrl::setLimitTemp(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:120:6:void MotorCtrl::setTarget(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:127:6:void MotorCtrl::setKp(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:134:6:void MotorCtrl::setKi(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:141:6:void MotorCtrl::setKd(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:148:6:void MotorCtrl::setLimitIe(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:155:10:uint16_t changeValue(float)	24	static
+../Core/Src/MotorCtrl.cpp:176:6:void MotorCtrl::transmit1()	24	static
+../Core/Src/MotorCtrl.cpp:194:6:void MotorCtrl::transmit2()	24	static
+../Core/Src/MotorCtrl.cpp:212:6:void MotorCtrl::ems()	24	static

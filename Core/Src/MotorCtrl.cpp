@@ -8,15 +8,15 @@
 #include "MotorCtrl.hpp"
 
 void MotorCtrl::setAng(uint16_t data, uint32_t receiveID){
-	param.mechanical_angle[receiveID-0x201] = 360.0*data/8191 - 180.0f;
+	param.mechanical_angle[receiveID-0x201] = 360.0*data/8191;
 }
 
 void MotorCtrl::setVel(uint16_t data, uint32_t receiveID){
 	if(data < 0x8000){
-		param.velocity[receiveID-0x201] = data*3.141592/60.0;
+		param.velocity[receiveID-0x201] = data*2*3.141592/60.0;
 	}else{
 		data =~ data;
-		param.velocity[receiveID-0x201] = -1*data*3.141592/60.0;
+		param.velocity[receiveID-0x201] = -1*data*2*3.141592/60.0;
 	}
 }
 
@@ -52,12 +52,13 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 		param.e_pre[number] = e;
 	}
 	if(param.mode[number] == Mode::pos){
-//		if(param.mechanical_angle[number] >= 0){
-//			param.revolution[number] = param.mechanical_angle[number] + 360*static_cast<uint32_t>((param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001)/360);
-//		}else{
-//			param.revolution[number] = param.mechanical_angle[number] + 360*(static_cast<uint32_t>((param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001)/360)+1);
-//		}
-		param.revolution[number] = param.revolution[number] + param.velocity[number]*360/(2*3.141592)*0.001;
+		if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
+			param.rotation[number]--;
+		}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
+			param.rotation[number]++;
+		}
+		param.revolution[number] = param.rotation[number]*360.0 + param.mechanical_angle[number];
+		param.pre_mechanical_angle[number] = param.mechanical_angle[number];
 		e = param.target[number] - param.revolution[number];
 		param.ie[number] = param.ie[number] + e*0.001;
 		if(param.ie[number]>param.limitIe[number]){
@@ -83,6 +84,8 @@ void MotorCtrl::reset(uint8_t i){
 		param.e_pre[i]=0;
 		param.ie[i]=0;
 		param.revolution[i]=0;
+		param.rotation[i]=0;
+		param.pre_mechanical_angle[i]=0;
 }
 
 void MotorCtrl::setMode(uint8_t usb_msg[]){
@@ -95,7 +98,8 @@ void MotorCtrl::setMode(uint8_t usb_msg[]){
 			reset(i);
 		}else if(usb_msg[i+1]==2){
 			param.mode[i] = Mode::pos;
-			//param.revolution[i] = param.mechanical_angle[i] - 180.0f;
+			param.revolution[i] = param.mechanical_angle[i];
+			param.pre_mechanical_angle[i] = param.mechanical_angle[i];
 			reset(i);
 		}else if(usb_msg[i+1]==3){
 			param.mode[i] = Mode::hom;
@@ -183,10 +187,10 @@ void MotorCtrl::transmit1(){
 		}
 	}
 	if (0 < HAL_CAN_GetTxMailboxesFreeLevel(&hcan))
-	    {
-	        led_on(can);
-	        HAL_CAN_AddTxMessage(&hcan, &TxHeader1, value1, &TxMailbox);
-	    }
+	{
+	    led_on(can);
+	    HAL_CAN_AddTxMessage(&hcan, &TxHeader1, value1, &TxMailbox);
+	}
 }
 
 void MotorCtrl::transmit2(){
