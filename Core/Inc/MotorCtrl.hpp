@@ -41,7 +41,8 @@ struct MotorParam{
 	float Ki[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float Kd[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float revolution[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	int16_t rotation[8] = {0,0,0,0,0,0,0,0};
+	int32_t rotation[8] = {0,0,0,0,0,0,0,0};
+	float revolution_vel[8] = {0,0,0,0,0,0,0,0};
 };
 
 class MotorCtrl{
@@ -55,13 +56,15 @@ public:
 	void setCur(uint16_t data, uint32_t receiveID);
 	bool update(uint32_t ReceiveID,uint8_t receiveData[8]);
 	void reset(uint8_t i);
-	void setMode(uint8_t usb_msg[]);
-	void setLimitTemp(uint8_t usb_msg[]);
+	void setFrame(uint8_t usb_msg[]);
 	void setTarget(uint8_t usb_msg[]);
-	void setKp(uint8_t usb_msg[]);
-	void setKi(uint8_t usb_msg[]);
-	void setKd(uint8_t usb_msg[]);
-	void setLimitIe(uint8_t usb_msg[]);
+	//void setMode(uint8_t usb_msg[]);
+	//void setLimitTemp(uint8_t usb_msg[]);
+	//void setTarget(uint8_t usb_msg[]);
+	//void setKp(uint8_t usb_msg[]);
+	//void setKi(uint8_t usb_msg[]);
+	//void setKd(uint8_t usb_msg[]);
+	//void setLimitIe(uint8_t usb_msg[]);
 	uint8_t value1[8];
 	uint8_t value2[8];
 	void transmit1();

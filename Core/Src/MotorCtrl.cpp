@@ -52,6 +52,7 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 		param.e_pre[number] = e;
 	}
 	if(param.mode[number] == Mode::pos){
+		param.revolution_vel[number] = param.revolution_vel[number] + param.velocity[number]*360/(2*3.141592);
 		if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
 			param.rotation[number]--;
 		}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
@@ -88,6 +89,53 @@ void MotorCtrl::reset(uint8_t i){
 		param.pre_mechanical_angle[i]=0;
 }
 
+void MotorCtrl::setFrame(uint8_t usb_msg[]){
+	uint8_t number = (usb_msg[0]&0x0f);
+	if(usb_msg[1]==0){
+		param.mode[number] = Mode::dis;
+		reset(number);
+	}else if(usb_msg[1]==1){
+		param.mode[number] = Mode::vel;
+		reset(number);
+	}else if(usb_msg[1]==2){
+		param.mode[number] = Mode::pos;
+		param.revolution[number] = param.mechanical_angle[number];
+		param.pre_mechanical_angle[number] = param.mechanical_angle[number];
+		reset(number);
+	}else if(usb_msg[1]==3){
+		param.mode[number] = Mode::hom;
+		reset(number);
+	}
+	/*if(usb_msg[8] == 1){
+		diag=1;
+	}else if(usb_msg[8] == 1){
+		diag=0;
+	}*/
+	param.limitTemp[number] = usb_msg[2];
+	uint32_t buf = (usb_msg[3] << 24) | (usb_msg[4] << 16) | (usb_msg[5] << 8) | (usb_msg[6] << 0);
+	std::memcpy(&param.Kp[number],&buf,1);
+	buf = (usb_msg[7] << 24) | (usb_msg[8] << 16) | (usb_msg[9] << 8) | (usb_msg[10] << 0);
+	std::memcpy(&param.Ki[number],&buf,1);
+	buf = (usb_msg[11] << 24) | (usb_msg[12] << 16) | (usb_msg[13] << 8) | (usb_msg[14] << 0);
+	std::memcpy(&param.Kd[number],&buf,1);
+	buf = (usb_msg[15] << 24) | (usb_msg[16] << 16) | (usb_msg[17] << 8) | (usb_msg[18] << 0);
+	std::memcpy(&param.limitIe[number],&buf,1);
+}
+
+void MotorCtrl::setTarget(uint8_t usb_msg[]){
+	uint8_t number = (usb_msg[0]&0x0f)-8;
+	uint32_t buf = (usb_msg[1] << 24) | (usb_msg[2] << 16) | (usb_msg[3] << 8) | (usb_msg[4] << 0);
+	std::memcpy(&param.target[number],&buf,1);
+	if(param.mode[number] == Mode::vel){
+		if(param.target[number] < -932){
+			param.target[number] = -932;
+		}else if(param.target[number] > 932){
+			param.target[number] = 932;
+		}
+	}
+}
+
+/*
 void MotorCtrl::setMode(uint8_t usb_msg[]){
 	for(int i = 0;i<8;i++){
 		if(usb_msg[i+1]==0){
@@ -123,6 +171,13 @@ void MotorCtrl::setTarget(uint8_t usb_msg[]){
 	for(int i =0;i<8;i++){
 		uint32_t buf = (usb_msg[4*i+1] << 24) | (usb_msg[4*i+2] << 16) | (usb_msg[4*i+3] << 8) | (usb_msg[4*i+4] << 0);
 		std::memcpy(&param.target[i],&buf,1);
+		if(param.mode == Mode::vel){
+			if(param.target[i] < -932){
+				param.target[i] = -932;
+			}else if(param.target[i] > 932){
+				param.target[i] = 932;
+			}
+		}
 	}
 }
 
@@ -153,7 +208,7 @@ void MotorCtrl::setLimitIe(uint8_t usb_msg[]){
 		std::memcpy(&param.limitIe[i],&buf,1);
 	}
 }
-
+*/
 uint16_t changeValue(float target){
 	uint16_t value;
 	if(target < 0.0){

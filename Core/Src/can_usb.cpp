@@ -37,7 +37,7 @@ void usb_process(uint8_t usb_msg[], const uint8_t len)
         static uint8_t HelloSLCAN_encoded[] = {0x0c, 0x01 << 4, 'H', 'e', 'l', 'l', 'o', 'S', 'L', 'C', 'A', 'N', 0x00};
         CDC_Transmit_FS(HelloSLCAN_encoded, 11 + 2);
     }
-    case 0x03: //robomaster_set_parameter
+    case 0x03: // robomaster_set_parameter
     {
     	robomaster(usb_msg, len);
     }
@@ -165,6 +165,14 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 	uint8_t command & prosess_id: (command: if it is normal can frame,
 	uint8_t data[8or9or32] : data
     */
+
+	if ((usb_msg[0] & 0x0f) < 8){
+		motor.setFrame(usb_msg);
+	}else if((usb_msg[0] & 0x0f) >7){
+		motor.setTarget(usb_msg);
+	}
+
+	/*
 	switch (usb_msg[0] & 0x0f){
 	case 0x00:{
 		motor.setMode(usb_msg);
@@ -187,5 +195,5 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 	}case 0x06:{
 		motor.setLimitIe(usb_msg);
 	}
-	}
+	}*/
 }
