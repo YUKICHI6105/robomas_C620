@@ -21,13 +21,21 @@ enum class Mode{
 	dis,
 	vel,
 	pos,
-	hom,
+	toyopachi,
 };
 
 struct MotorParam{
 	Mode mode[8] = {Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis};
 	float goal[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
 	float target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//目標値
+	float pachi_vel_target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachi_pos_target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachiVelKp[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachiVelKi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachiVelKd[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachiPosKp[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachiPosKi[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float pachiPosKd[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float ie[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float limitIe[8] = {100000.0,100000.0,100000.0,100000.0,100000.0,100000.0,100000.0,100000.0};
 	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//de
@@ -42,7 +50,7 @@ struct MotorParam{
 	float Kd[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float revolution[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	int32_t rotation[8] = {0,0,0,0,0,0,0,0};
-	float revolution_vel[8] = {0,0,0,0,0,0,0,0};
+	//float revolution_vel[8] = {0,0,0,0,0,0,0,0};
 };
 
 class MotorCtrl{
@@ -54,6 +62,7 @@ public:
 	void setAng(uint16_t data, uint32_t receiveID);
 	void setVel(uint16_t data, uint32_t receiveID);
 	void setCur(uint16_t data, uint32_t receiveID);
+	void pachiReset(uint8_t i);
 	bool update(uint32_t ReceiveID,uint8_t receiveData[8]);
 	void reset(uint8_t i);
 	void setFrame(uint8_t usb_msg[]);
@@ -70,6 +79,21 @@ public:
 	void transmit1();
 	void transmit2();
 	void ems();
-	uint8_t diag = 1;
+	uint8_t diag = 0;
+	uint8_t data[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	uint8_t usb_data[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	void test_usb(uint8_t usb_msg[]);
+	void usb(uint8_t usb_msg[]);
 };
 
+inline void MotorCtrl::test_usb(uint8_t usb_msg[]){
+	for(int i = 0; i < 20; i++){
+		data[i] = usb_msg[i];
+	}
+}
+
+inline void MotorCtrl::usb(uint8_t usb_msg[]){
+	for(int i = 0; i < 20; i++){
+		usb_data[i] = usb_msg[i];
+	}
+}

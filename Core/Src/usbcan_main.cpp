@@ -60,6 +60,8 @@ void main_cpp()
 				led_on(green);
 				debug_state = 1;
 				break;
+			default:
+				break;
 			}
 		}
 		else if (debug_state == 1)

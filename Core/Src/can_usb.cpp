@@ -16,6 +16,7 @@ void robomaster(uint8_t usb_msg[], const uint8_t len);
 // it process  all usb messages
 void usb_process(uint8_t usb_msg[], const uint8_t len)
 {
+	motor.test_usb(usb_msg);
     // data structure
     /*
     uint8_t command & frame_type:
@@ -37,10 +38,13 @@ void usb_process(uint8_t usb_msg[], const uint8_t len)
         static uint8_t HelloSLCAN_encoded[] = {0x0c, 0x01 << 4, 'H', 'e', 'l', 'l', 'o', 'S', 'L', 'C', 'A', 'N', 0x00};
         CDC_Transmit_FS(HelloSLCAN_encoded, 11 + 2);
     }
+    break;
     case 0x03: // robomaster_set_parameter
     {
-    	robomaster(usb_msg, len);
+    	motor.usb(usb_msg);
+    	robomaster(usb_msg,len);
     }
+    break;
     default:
         break;
     }
@@ -122,6 +126,7 @@ void usb_to_can(uint8_t usb_msg[], const uint8_t len)
     uint8_t dlc : data length
     uint8_t data[8] : data
     */
+	if(len != 14){return;}
     if (usb_msg[0] & 0x02)
     {
         // extended id
@@ -166,9 +171,9 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 	uint8_t data[8or9or32] : data
     */
 
-	if ((usb_msg[0] & 0x0f) < 8){
+	if (((usb_msg[0] & 0x0f) < 8) && (len == 19)){
 		motor.setFrame(usb_msg);
-	}else if((usb_msg[0] & 0x0f) >7){
+	}else if(((usb_msg[0] & 0x0f) >7) && (len == 5)){
 		motor.setTarget(usb_msg);
 	}
 

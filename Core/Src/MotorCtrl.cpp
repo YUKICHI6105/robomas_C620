@@ -6,6 +6,7 @@
  */
 
 #include "MotorCtrl.hpp"
+#include <math.h>
 
 void MotorCtrl::setAng(uint16_t data, uint32_t receiveID){
 	param.mechanical_angle[receiveID-0x201] = 360.0*data/8191;
@@ -27,6 +28,20 @@ void MotorCtrl::setCur(uint16_t data, uint32_t receiveID){
 	}else{
 		param.current[receiveID-0x201] = 20*data/16384;
 	}
+}
+
+void MotorCtrl::pachiReset(uint8_t i){
+	value1[i]=0;
+	value2[i]=0;
+	param.goal[i]=0;
+	param.e_pre[i]=0;
+	param.ie[i]=0;
+	param.rotation[i] = param.rotation[i]-param.pachi_pos_target[i];
+	param.rotation[i] = param.revolution[i]/360;
+	if(param.revolution[i] < 0){
+		param.rotation[i]--;
+	}
+	param.target[i]=0;
 }
 
 bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
@@ -52,7 +67,7 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 		param.e_pre[number] = e;
 	}
 	if(param.mode[number] == Mode::pos){
-		param.revolution_vel[number] = param.revolution_vel[number] + param.velocity[number]*360/(2*3.141592);
+		//param.revolution_vel[number] = param.revolution_vel[number] + param.velocity[number]*360.0*0.001/(2*3.141592);
 		if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
 			param.rotation[number]--;
 		}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
@@ -70,8 +85,40 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 		param.goal[number] = param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]*0.001/2+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
 		param.e_pre[number] = e;
 	}
-	if(param.mode[number] == Mode::hom){
-
+	if(param.mode[number] == Mode::toyopachi){
+		if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
+			param.rotation[number]--;
+		}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
+			param.rotation[number]++;
+		}
+		param.revolution[number] = param.rotation[number]*360.0 + param.mechanical_angle[number];
+		param.pre_mechanical_angle[number] = param.mechanical_angle[number];
+		if(param.target[number] == 1){
+			if(param.revolution[number] < param.pachi_pos_target[number]/2){//vel_ctrl
+				e = param.pachi_vel_target[number] - param.velocity[number];
+				param.ie[number] = param.ie[number] + e;
+				if(param.ie[number]>param.limitIe[number]){
+					param.ie[number] = param.limitIe[number];
+				}else if(param.ie[number]<-1*param.limitIe[number]){
+					param.ie[number] = -1*param.limitIe[number];
+				}
+				param.goal[number] = param.goal[number]+param.pachiVelKp[number]*0.0001*e+param.pachiVelKi[number]*0.0001*param.ie[number]*0.001/2+(param.pachiVelKd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
+				param.e_pre[number] = e;
+				}else{//pos_ctrl
+				e = param.pachi_pos_target[number] - param.revolution[number];
+				param.ie[number] = param.ie[number] + e*0.001;
+				if(param.ie[number]>param.limitIe[number]){
+					param.ie[number] = param.limitIe[number];
+				}else if(param.ie[number]<-1*param.limitIe[number]){
+					param.ie[number] = -1*param.limitIe[number];
+				}
+				param.goal[number] = param.pachiPosKp[number]*0.0001*e+param.pachiPosKi[number]*0.0001*param.ie[number]*0.001/2+(param.pachiPosKd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
+				param.e_pre[number] = e;
+				if((param.pachi_pos_target[number]-5) < param.revolution[number]){
+					pachiReset(number);
+				}
+			}
+		}
 	}
 	return true;
 }
@@ -90,21 +137,21 @@ void MotorCtrl::reset(uint8_t i){
 }
 
 void MotorCtrl::setFrame(uint8_t usb_msg[]){
-	uint8_t number = (usb_msg[0]&0x0f);
+	uint8_t number = (usb_msg[0] - 0x30);
 	if(usb_msg[1]==0){
+		reset(number);
 		param.mode[number] = Mode::dis;
-		reset(number);
 	}else if(usb_msg[1]==1){
-		param.mode[number] = Mode::vel;
 		reset(number);
+		param.mode[number] = Mode::vel;
 	}else if(usb_msg[1]==2){
+		reset(number);
 		param.mode[number] = Mode::pos;
 		param.revolution[number] = param.mechanical_angle[number];
 		param.pre_mechanical_angle[number] = param.mechanical_angle[number];
-		reset(number);
 	}else if(usb_msg[1]==3){
-		param.mode[number] = Mode::hom;
 		reset(number);
+		param.mode[number] = Mode::toyopachi;
 	}
 	/*if(usb_msg[8] == 1){
 		diag=1;
@@ -112,20 +159,15 @@ void MotorCtrl::setFrame(uint8_t usb_msg[]){
 		diag=0;
 	}*/
 	param.limitTemp[number] = usb_msg[2];
-	uint32_t buf = (usb_msg[3] << 24) | (usb_msg[4] << 16) | (usb_msg[5] << 8) | (usb_msg[6] << 0);
-	std::memcpy(&param.Kp[number],&buf,1);
-	buf = (usb_msg[7] << 24) | (usb_msg[8] << 16) | (usb_msg[9] << 8) | (usb_msg[10] << 0);
-	std::memcpy(&param.Ki[number],&buf,1);
-	buf = (usb_msg[11] << 24) | (usb_msg[12] << 16) | (usb_msg[13] << 8) | (usb_msg[14] << 0);
-	std::memcpy(&param.Kd[number],&buf,1);
-	buf = (usb_msg[15] << 24) | (usb_msg[16] << 16) | (usb_msg[17] << 8) | (usb_msg[18] << 0);
-	std::memcpy(&param.limitIe[number],&buf,1);
+	std::memcpy(&param.Kp[number],usb_msg + 3,sizeof(float));
+	std::memcpy(&param.Ki[number],usb_msg + 7,sizeof(float));
+	std::memcpy(&param.Kd[number],usb_msg + 11,sizeof(float));
+	std::memcpy(&param.limitIe[number],usb_msg + 15,sizeof(float));
 }
 
 void MotorCtrl::setTarget(uint8_t usb_msg[]){
 	uint8_t number = (usb_msg[0]&0x0f)-8;
-	uint32_t buf = (usb_msg[1] << 24) | (usb_msg[2] << 16) | (usb_msg[3] << 8) | (usb_msg[4] << 0);
-	std::memcpy(&param.target[number],&buf,1);
+	std::memcpy(&param.target[number],usb_msg + 1,sizeof(float));
 	if(param.mode[number] == Mode::vel){
 		if(param.target[number] < -932){
 			param.target[number] = -932;
