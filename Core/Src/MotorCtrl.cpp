@@ -71,7 +71,7 @@ void MotorCtrl::pachiReset(uint8_t i){
 	param.goal[i]=0;
 	param.e_pre[i]=0;
 	param.ie[i]=0;
-	param.rotation[i] = param.rotation[i]-param.pachi_pos_target[i];
+	param.revolution[i] = param.revolution[i]-param.pachi_pos_target[i];
 	param.rotation[i] = param.revolution[i]/360;
 	if(param.revolution[i] < 0){
 		param.rotation[i]--;
