@@ -1,6 +1,6 @@
 ../Core/Inc/cobs.h:8:17:void cobs_encode(const uint8_t*, uint8_t*, int)	32	static
-../Core/Inc/MotorCtrl.hpp:89:13:void MotorCtrl::test_usb(uint8_t*)	24	static
-../Core/Inc/MotorCtrl.hpp:95:13:void MotorCtrl::usb(uint8_t*)	24	static
+../Core/Inc/MotorCtrl.hpp:92:13:void MotorCtrl::test_usb(uint8_t*)	24	static
+../Core/Inc/MotorCtrl.hpp:98:13:void MotorCtrl::usb(uint8_t*)	24	static
 ../Core/Src/can_usb.cpp:17:6:void usb_process(uint8_t*, uint8_t)	16	static
 ../Core/Src/can_usb.cpp:56:6:void can_process(const CAN_RxHeaderTypeDef*, uint8_t*)	32	static
 ../Core/Src/can_usb.cpp:120:6:void usb_to_can(uint8_t*, uint8_t)	16	static

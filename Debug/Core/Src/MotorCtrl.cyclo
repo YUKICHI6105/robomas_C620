@@ -1,12 +1,15 @@
 ../Core/Src/MotorCtrl.cpp:11:6:void MotorCtrl::setAng(uint16_t, uint32_t)	1
 ../Core/Src/MotorCtrl.cpp:15:6:void MotorCtrl::setVel(uint16_t, uint32_t)	2
 ../Core/Src/MotorCtrl.cpp:24:6:void MotorCtrl::setCur(uint16_t, uint32_t)	4
-../Core/Src/MotorCtrl.cpp:33:6:void MotorCtrl::pachiReset(uint8_t)	2
-../Core/Src/MotorCtrl.cpp:47:6:bool MotorCtrl::update(uint32_t, uint8_t*)	22
-../Core/Src/MotorCtrl.cpp:126:6:void MotorCtrl::reset(uint8_t)	1
-../Core/Src/MotorCtrl.cpp:139:6:void MotorCtrl::setFrame(uint8_t*)	5
-../Core/Src/MotorCtrl.cpp:168:6:void MotorCtrl::setTarget(uint8_t*)	4
-../Core/Src/MotorCtrl.cpp:254:10:uint16_t changeValue(float)	4
-../Core/Src/MotorCtrl.cpp:275:6:void MotorCtrl::transmit1()	5
-../Core/Src/MotorCtrl.cpp:293:6:void MotorCtrl::transmit2()	5
-../Core/Src/MotorCtrl.cpp:311:6:void MotorCtrl::ems()	1
+../Core/Src/MotorCtrl.cpp:33:6:void MotorCtrl::setRevolution(uint8_t)	3
+../Core/Src/MotorCtrl.cpp:44:6:void MotorCtrl::velPID(uint8_t)	3
+../Core/Src/MotorCtrl.cpp:56:6:void MotorCtrl::posPID(uint8_t)	3
+../Core/Src/MotorCtrl.cpp:68:6:void MotorCtrl::pachiReset(uint8_t)	2
+../Core/Src/MotorCtrl.cpp:82:6:bool MotorCtrl::update(uint32_t, uint8_t*)	14
+../Core/Src/MotorCtrl.cpp:132:6:void MotorCtrl::reset(uint8_t)	1
+../Core/Src/MotorCtrl.cpp:145:6:void MotorCtrl::setFrame(uint8_t*)	5
+../Core/Src/MotorCtrl.cpp:174:6:void MotorCtrl::setTarget(uint8_t*)	4
+../Core/Src/MotorCtrl.cpp:260:10:uint16_t changeValue(float)	4
+../Core/Src/MotorCtrl.cpp:281:6:void MotorCtrl::transmit1()	5
+../Core/Src/MotorCtrl.cpp:299:6:void MotorCtrl::transmit2()	5
+../Core/Src/MotorCtrl.cpp:317:6:void MotorCtrl::ems()	1

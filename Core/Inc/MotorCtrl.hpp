@@ -62,6 +62,9 @@ public:
 	void setAng(uint16_t data, uint32_t receiveID);
 	void setVel(uint16_t data, uint32_t receiveID);
 	void setCur(uint16_t data, uint32_t receiveID);
+	void setRevolution(uint8_t number);
+	void velPID(uint8_t number);
+	void posPID(uint8_t number);
 	void pachiReset(uint8_t i);
 	bool update(uint32_t ReceiveID,uint8_t receiveData[8]);
 	void reset(uint8_t i);

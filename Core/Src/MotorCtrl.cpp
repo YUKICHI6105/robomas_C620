@@ -30,6 +30,41 @@ void MotorCtrl::setCur(uint16_t data, uint32_t receiveID){
 	}
 }
 
+void MotorCtrl::setRevolution(uint8_t number){
+	//param.revolution_vel[number] = param.revolution_vel[number] + param.velocity[number]*360.0*0.001/(2*3.141592);
+	if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
+		param.rotation[number]--;
+	}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
+		param.rotation[number]++;
+	}
+	param.revolution[number] = param.rotation[number]*360.0 + param.mechanical_angle[number];
+	param.pre_mechanical_angle[number] = param.mechanical_angle[number];
+}
+
+void MotorCtrl::velPID(uint8_t number){
+	e = param.target[number] - param.velocity[number];
+	param.ie[number] = param.ie[number] + (e+param.e_pre[number])*0.001/2;
+	if(param.ie[number]>param.limitIe[number]){
+		param.ie[number] = param.limitIe[number];
+	}else if(param.ie[number]<-1*param.limitIe[number]){
+		param.ie[number] = -1*param.limitIe[number];
+	}
+	param.goal[number] = param.goal[number]+param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001);
+	param.e_pre[number] = e;
+}
+
+void MotorCtrl::posPID(uint8_t number){
+	e = param.target[number] - param.revolution[number];
+	param.ie[number] = param.ie[number] + (e+param.e_pre[number])*0.001/2;
+	if(param.ie[number]>param.limitIe[number]){
+		param.ie[number] = param.limitIe[number];
+	}else if(param.ie[number]<-1*param.limitIe[number]){
+		param.ie[number] = -1*param.limitIe[number];
+	}
+	param.goal[number] = param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001);
+	param.e_pre[number] = e;
+}
+
 void MotorCtrl::pachiReset(uint8_t i){
 	value1[i]=0;
 	value2[i]=0;
@@ -56,43 +91,14 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 		reset(number);
 	}
 	if(param.mode[number] == Mode::vel){
-		e = param.target[number] - param.velocity[number];
-		param.ie[number] = param.ie[number] + e;
-		if(param.ie[number]>param.limitIe[number]){
-			param.ie[number] = param.limitIe[number];
-		}else if(param.ie[number]<-1*param.limitIe[number]){
-			param.ie[number] = -1*param.limitIe[number];
-		}
-		param.goal[number] = param.goal[number]+param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]*0.001/2+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
-		param.e_pre[number] = e;
+		velPID(number);
 	}
 	if(param.mode[number] == Mode::pos){
-		//param.revolution_vel[number] = param.revolution_vel[number] + param.velocity[number]*360.0*0.001/(2*3.141592);
-		if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
-			param.rotation[number]--;
-		}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
-			param.rotation[number]++;
-		}
-		param.revolution[number] = param.rotation[number]*360.0 + param.mechanical_angle[number];
-		param.pre_mechanical_angle[number] = param.mechanical_angle[number];
-		e = param.target[number] - param.revolution[number];
-		param.ie[number] = param.ie[number] + e*0.001;
-		if(param.ie[number]>param.limitIe[number]){
-			param.ie[number] = param.limitIe[number];
-		}else if(param.ie[number]<-1*param.limitIe[number]){
-			param.ie[number] = -1*param.limitIe[number];
-		}
-		param.goal[number] = param.Kp[number]*0.0001*e+param.Ki[number]*0.0001*param.ie[number]*0.001/2+(param.Kd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
-		param.e_pre[number] = e;
+		setRevolution(number);
+		posPID(number);
 	}
 	if(param.mode[number] == Mode::toyopachi){
-		if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) > 180){
-			param.rotation[number]--;
-		}else if((param.mechanical_angle[number] - param.pre_mechanical_angle[number]) < -180){
-			param.rotation[number]++;
-		}
-		param.revolution[number] = param.rotation[number]*360.0 + param.mechanical_angle[number];
-		param.pre_mechanical_angle[number] = param.mechanical_angle[number];
+		setRevolution(number);
 		if(param.target[number] == 1){
 			if(param.revolution[number] < param.pachi_pos_target[number]/2){//vel_ctrl
 				e = param.pachi_vel_target[number] - param.velocity[number];
@@ -106,15 +112,15 @@ bool MotorCtrl::update(uint32_t ReceiveID,uint8_t receiveData[8]){
 				param.e_pre[number] = e;
 				}else{//pos_ctrl
 				e = param.pachi_pos_target[number] - param.revolution[number];
-				param.ie[number] = param.ie[number] + e*0.001;
+				param.ie[number] = param.ie[number] + (e+param.e_pre[number])*0.001/2;
 				if(param.ie[number]>param.limitIe[number]){
 					param.ie[number] = param.limitIe[number];
 				}else if(param.ie[number]<-1*param.limitIe[number]){
 					param.ie[number] = -1*param.limitIe[number];
 				}
-				param.goal[number] = param.pachiPosKp[number]*0.0001*e+param.pachiPosKi[number]*0.0001*param.ie[number]*0.001/2+(param.pachiPosKd[number]*0.0001*(e-param.e_pre[number])/0.001)/2;
+				param.goal[number] = param.pachiPosKp[number]*0.0001*e+param.pachiPosKi[number]*0.0001*param.ie[number]+(param.pachiPosKd[number]*0.0001*(e-param.e_pre[number])/0.001);
 				param.e_pre[number] = e;
-				if((param.pachi_pos_target[number]-5) < param.revolution[number]){
+				if(param.velocity[number] == 0.0){
 					pachiReset(number);
 				}
 			}
