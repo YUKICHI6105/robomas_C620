@@ -171,9 +171,9 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 	uint8_t data[8or9or32] : data
     */
 
-	if (((usb_msg[0] & 0x0f) < 8) && (len == 19)){
-		motor.setFrame(usb_msg);
-	}else if(((usb_msg[0] & 0x0f) >7) && (len == 5)){
+	if ((usb_msg[1] & 0x08) == 0){
+		motor.setFrame(usb_msg,len);
+	}else if(((usb_msg[0] & 0x08) == 1) && (len == 5)){
 		motor.setTarget(usb_msg);
 	}
 
