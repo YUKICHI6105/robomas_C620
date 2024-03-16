@@ -1,9 +1,9 @@
+#include <MotorCtrl.hpp>
 #include "main.h"
 #include "usbd_cdc_if.h"
 #include "usb_device.h"
 #include "led.h"
 #include "can_usb.h"
-#include "MotorCtrl.hpp"
 
 MotorCtrl motor;
 

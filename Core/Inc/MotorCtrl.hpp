@@ -31,39 +31,38 @@ enum class Motor{
 };
 
 struct PIDParam{
-	float Kp[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float Ki[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float Kd[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float e_pre[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//de
-	float ie[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float limitIe[8] = {100000.0,100000.0,100000.0,100000.0,100000.0,100000.0,100000.0,100000.0};
+	float velKp = 0.15f;
+	float velKi = 13.0f;
+	float posKp = 0.5f;
+	float vel_e_pre = 0.0f;//de
+	float vel_du_pre = 0.0f;
+	void velPID(float target, float& goal, float& velocity, Motor& motorKinds);
 };
 
 struct MotorParam{
-	Motor motorKinds[8] = {Motor::C620,Motor::C620,Motor::C620,Motor::C620,Motor::C620,Motor::C620,Motor::C620,Motor::C620};
-	Mode mode[8] = {Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis,Mode::dis};
-	float goal[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};//PID処理後の操作量
-	float target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//目標値
-	float tyoku_vel_target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float tyoku_pos_target[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float stableLimitVel[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float mechanical_angle[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//機械角
-	float pre_mechanical_angle[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float init_mechanical_angle[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float velocity[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};//rpm->rad/s
-	float current[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	uint8_t temp[8] = {0,0,0,0,0,0,0,0};
-	uint8_t limitTemp[8] = {50,50,50,50,50,50,50,50};
-	float revolution[8] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	int32_t rotation[8] = {0,0,0,0,0,0,0,0};
+	Motor motorKinds = Motor::C620;
+	Mode mode = Mode::dis;
+	float goal =0.0f;//PID処理後の操作量
+	float target = 0.0;//目標値
+	float tyoku_vel_target = 0.0;
+	float tyoku_pos_target = 0.0;
+	float stableLimitVel = 0.0;
+	float mechanical_angle = 0.0;//機械角
+	float pre_mechanical_angle = 0.0;
+	float init_mechanical_angle = 0.0;
+	float velocity = 0.0;//rpm->rad/s
+	float current = 0.0;
+	uint8_t temp = 0;
+	uint8_t limitTemp = 50;
+	float revolution = 0.0;
+	int32_t rotation = 0;
 	//float revolution_vel[8] = {0,0,0,0,0,0,0,0};
 };
 
 class MotorCtrl{
 private:
-	MotorParam param;
-	PIDParam posPIDParam;
-	PIDParam velPIDParam;
+	MotorParam param[8];
+	PIDParam pidParam[8];
 	float e = 0.0;
 	//uint16_t vel = 0;
 public:
@@ -72,7 +71,7 @@ public:
 	void setCurC610(uint16_t data, uint32_t receiveID);
 	void setCurC620(uint16_t data, uint32_t receiveID);
 	void setRevolution(uint8_t& number);
-	void velPID(uint8_t& number, float& target);
+	void velPID(uint8_t& number, float target);
 	float posPID(uint8_t& number, float& target);
 	void tyokuReset(uint8_t i);
 	void stableposPID(uint8_t& number, float& target);

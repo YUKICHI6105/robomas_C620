@@ -36,7 +36,6 @@ uint8_t DecodedData[64];
 uint8_t data_index = 0;
 uint8_t zero_count = 10;
 uint8_t is_first = 0;
-
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -237,27 +236,25 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
     case CDC_SET_LINE_CODING:
     {
 
-    	HAL_GPIO_WritePin(GPIOB,LED_GREEN_Pin,GPIO_PIN_SET);
-      linecoding.bitrate    = (uint32_t)(pbuf[0] | (pbuf[1] << 8) |\
+    	HAL_GPIO_WritePin(LED_CAN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_SET);
+    	linecoding.bitrate    = (uint32_t)(pbuf[0] | (pbuf[1] << 8) |\
                                          (pbuf[2] << 16) | (pbuf[3] << 24));
-      linecoding.format     = pbuf[4];
-      linecoding.paritytype = pbuf[5];
-      linecoding.datatype   = pbuf[6];
+    	linecoding.format     = pbuf[4];
+    	linecoding.paritytype = pbuf[5];
+    	linecoding.datatype   = pbuf[6];
     }
     break;
 
     case CDC_GET_LINE_CODING:
     {
-
-
-    	HAL_GPIO_WritePin(GPIOB,LED_GREEN_Pin,GPIO_PIN_SET);
-      pbuf[0] = (uint8_t)(linecoding.bitrate);
-      pbuf[1] = (uint8_t)(linecoding.bitrate >> 8);
-      pbuf[2] = (uint8_t)(linecoding.bitrate >> 16);
-      pbuf[3] = (uint8_t)(linecoding.bitrate >> 24);
-      pbuf[4] = linecoding.format;
-      pbuf[5] = linecoding.paritytype;
-      pbuf[6] = linecoding.datatype;
+    	HAL_GPIO_WritePin(LED_CAN_GPIO_Port,LED_GREEN_Pin,GPIO_PIN_SET);
+    	pbuf[0] = (uint8_t)(linecoding.bitrate);
+    	pbuf[1] = (uint8_t)(linecoding.bitrate >> 8);
+    	pbuf[2] = (uint8_t)(linecoding.bitrate >> 16);
+    	pbuf[3] = (uint8_t)(linecoding.bitrate >> 24);
+    	pbuf[4] = linecoding.format;
+    	pbuf[5] = linecoding.paritytype;
+    	pbuf[6] = linecoding.datatype;
     }
     break;
 

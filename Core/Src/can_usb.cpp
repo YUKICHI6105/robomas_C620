@@ -1,3 +1,4 @@
+#include <MotorCtrl.hpp>
 #include "can_usb.h"
 #include "cobs.h"
 #include "usbd_cdc_if.h"
@@ -5,7 +6,6 @@
 #include "main.h"
 
 #include "led.h"
-#include "MotorCtrl.hpp"
 
 extern CAN_HandleTypeDef hcan;
 extern MotorCtrl motor;
@@ -171,9 +171,10 @@ void robomaster(uint8_t usb_msg[], const uint8_t len){
 	uint8_t data[8or9or32] : data
     */
 
-	if ((usb_msg[1] & 0x08) == 0){
+	if ((usb_msg[0] & 0x08) == 0){
 		motor.setFrame(usb_msg,len);
-	}else if(((usb_msg[0] & 0x08) == 1) && (len == 5)){
+//	}else if(((usb_msg[0] & 0x08) == 0x08) && (len == 5)){
+	}else if((usb_msg[0] & 0x08) == 0x08){
 		motor.setTarget(usb_msg);
 	}
 

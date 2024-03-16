@@ -1,18 +1,19 @@
-../Core/Src/MotorCtrl.cpp:11:6:void MotorCtrl::setAng(uint16_t, uint32_t)	32	static
-../Core/Src/MotorCtrl.cpp:15:6:void MotorCtrl::setVel(uint16_t, uint32_t)	32	static
-../Core/Src/MotorCtrl.cpp:24:6:void MotorCtrl::setCurC610(uint16_t, uint32_t)	24	static
-../Core/Src/MotorCtrl.cpp:33:6:void MotorCtrl::setCurC620(uint16_t, uint32_t)	24	static
-../Core/Src/MotorCtrl.cpp:42:6:void MotorCtrl::setRevolution(uint8_t&)	24	static
-../Core/Src/MotorCtrl.cpp:53:6:void MotorCtrl::velPID(uint8_t&, float&)	40	static
-../Core/Src/MotorCtrl.cpp:78:7:float MotorCtrl::posPID(uint8_t&, float&)	48	static
-../Core/Src/MotorCtrl.cpp:91:6:void MotorCtrl::stableposPID(uint8_t&, float&)	32	static
-../Core/Src/MotorCtrl.cpp:101:6:void MotorCtrl::tyokuReset(uint8_t)	16	static
-../Core/Src/MotorCtrl.cpp:117:6:bool MotorCtrl::update(uint32_t, uint8_t*)	40	static
-../Core/Src/MotorCtrl.cpp:159:6:void MotorCtrl::reset(uint8_t)	16	static
-../Core/Src/MotorCtrl.cpp:174:6:void MotorCtrl::setFrame(uint8_t*, uint8_t)	32	static
-../Core/Src/MotorCtrl.cpp:237:6:void MotorCtrl::setTarget(uint8_t*)	24	static
-../Core/Src/MotorCtrl.cpp:331:10:uint16_t getC620Value(float)	24	static
-../Core/Src/MotorCtrl.cpp:352:10:uint16_t getC610Value(float)	24	static
-../Core/Src/MotorCtrl.cpp:373:6:void MotorCtrl::transmit1()	24	static
-../Core/Src/MotorCtrl.cpp:396:6:void MotorCtrl::transmit2()	24	static
-../Core/Src/MotorCtrl.cpp:419:6:void MotorCtrl::ems()	24	static
+../Core/Src/MotorCtrl.cpp:13:6:void MotorCtrl::setAng(uint16_t, uint32_t)	32	static
+../Core/Src/MotorCtrl.cpp:17:6:void MotorCtrl::setVel(uint16_t, uint32_t)	32	static
+../Core/Src/MotorCtrl.cpp:26:6:void MotorCtrl::setCurC610(uint16_t, uint32_t)	24	static
+../Core/Src/MotorCtrl.cpp:35:6:void MotorCtrl::setCurC620(uint16_t, uint32_t)	24	static
+../Core/Src/MotorCtrl.cpp:44:6:void MotorCtrl::setRevolution(uint8_t&)	24	static
+../Core/Src/MotorCtrl.cpp:55:6:void PIDParam::velPID(float, float&, float&, Motor&)	56	static
+../Core/Src/MotorCtrl.cpp:77:6:void MotorCtrl::velPID(uint8_t&, float)	40	static
+../Core/Src/MotorCtrl.cpp:106:7:float MotorCtrl::posPID(uint8_t&, float&)	24	static
+../Core/Src/MotorCtrl.cpp:110:6:void MotorCtrl::stableposPID(uint8_t&, float&)	32	static
+../Core/Src/MotorCtrl.cpp:120:6:void MotorCtrl::tyokuReset(uint8_t)	16	static
+../Core/Src/MotorCtrl.cpp:134:6:bool MotorCtrl::update(uint32_t, uint8_t*)	32	static
+../Core/Src/MotorCtrl.cpp:179:6:void MotorCtrl::reset(uint8_t)	16	static
+../Core/Src/MotorCtrl.cpp:192:6:void MotorCtrl::setFrame(uint8_t*, uint8_t)	32	static
+../Core/Src/MotorCtrl.cpp:309:6:void MotorCtrl::setTarget(uint8_t*)	24	static
+../Core/Src/MotorCtrl.cpp:403:10:uint16_t getC620Value(float)	24	static
+../Core/Src/MotorCtrl.cpp:424:10:uint16_t getC610Value(float)	24	static
+../Core/Src/MotorCtrl.cpp:445:6:void MotorCtrl::transmit1()	24	static
+../Core/Src/MotorCtrl.cpp:468:6:void MotorCtrl::transmit2()	24	static
+../Core/Src/MotorCtrl.cpp:491:6:void MotorCtrl::ems()	24	static

@@ -1,5 +1,6 @@
 "./Core/Src/MotorCtrl.o"
 "./Core/Src/can_usb.o"
+"./Core/Src/cobs.o"
 "./Core/Src/led.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f3xx_hal_msp.o"
