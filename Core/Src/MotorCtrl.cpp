@@ -109,9 +109,12 @@ float MotorCtrl::posPID(uint8_t& number, float& target){
 
 void MotorCtrl::stableposPID(uint8_t& number, float& target){
 	float value = posPID(number,target);
-	if((value > 0)&&(value < param[number].stableLimitVel)){
+	if(param[number].stableLimitVel < 0){
+		param[number].stableLimitVel = -1*param[number].stableLimitVel;
+	}
+	if(value > param[number].stableLimitVel){
 		value = param[number].stableLimitVel;
-	}else if((value < 0)&&(value > -1*param[number].stableLimitVel)){
+	}else if(value < -1*param[number].stableLimitVel){
 		value = -1*param[number].stableLimitVel;
 	}
 	velPID(number, value);
