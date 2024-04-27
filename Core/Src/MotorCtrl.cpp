@@ -242,7 +242,9 @@ void MotorCtrl::setFrame(uint8_t usb_msg[], const uint8_t len){
 		break;
 	case 4:
 		reset(number);
-		param[number].revolution = param[number].mechanical_angle;
+		// param[number].revolution = param[number].mechanical_angle;
+		param[number].pre_mechanical_angle = param[number].mechanical_angle;
+		param[number].init_mechanical_angle = param[number].mechanical_angle;
 		param[number].mode = Mode::stablepos;
 		std::memcpy(&pidParam[number].velKp,usb_msg + 3,sizeof(float));
 		std::memcpy(&pidParam[number].velKi,usb_msg + 7,sizeof(float));
